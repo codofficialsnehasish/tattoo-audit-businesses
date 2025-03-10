@@ -119,7 +119,7 @@
                             <li><a href="{{ route('cource.index') }}">Cource</a></li>
                             @endcan
                             @can('Exam Show')
-                            <li><a href="{{ route('blog.index') }}">Exams</a></li>
+                            <li><a href="{{ route('exam.index') }}">Exams</a></li>
                             @endcan
                         </ul>
                     </li>

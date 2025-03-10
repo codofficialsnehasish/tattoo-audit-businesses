@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $user = Auth::user();
-
+        
         if ($user->status !== 1) {
             Auth::logout();
             $request->session()->invalidate();
@@ -36,8 +36,8 @@ class AuthenticatedSessionController extends Controller
         }
 
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        
+        return redirect()->intended(url()->previous() ?? route('dashboard'));
     }
 
     /**

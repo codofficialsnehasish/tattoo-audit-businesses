@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('option_c');
             $table->string('option_d');
             $table->string('correct_answer'); // example: a, b, c, d
+            $table->integer('step_number');
             $table->timestamps();
         });
     }

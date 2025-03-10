@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\{
     ChecklistItemController,
     CourseController,
     CourseContentController,
+    ExamController,
+    ExamQuestionsController,
 };
 
 use App\Http\Controllers\Site\{
@@ -31,6 +33,7 @@ use App\Http\Controllers\Site\{
     WebCertificateController,
     SiteCourseController,
     LessonController,
+    EnrollmentController,
 };
 
 
@@ -49,7 +52,14 @@ Route::get('/blogs/{slug?}',[WebBlogController::class,'blog_details'])->name('bl
 Route::get('/course',[SiteCourseController::class,'index'])->name('course');
 Route::get('/course/details/{slug?}',[SiteCourseController::class,'course_details'])->name('course-details');
 
-Route::get('/learn/{course_slug?}', [LessonController::class, 'learningPage'])->name('course.learn');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/course/enroll/{course_id}', [EnrollmentController::class, 'enroll'])->name('course.enroll');
+    Route::post('/course/payment/process', [EnrollmentController::class, 'processPayment'])->name('course.payment.process');
+    Route::post('/course/payment/verify', [EnrollmentController::class, 'verifyPayment'])->name('course.payment.verify');
+    
+    Route::get('/learn/{course_slug?}', [LessonController::class, 'learningPage'])->name('course.learn');
+});
+
 
 
 Route::get('registration',[RegistrationController::class,'registration'])->name('registration');
@@ -144,6 +154,22 @@ Route::middleware('auth')->group(function () {
             Route::post("/{routeId}/sort",'sort')->name('sort');
         });
     });
+
+    Route::resource('exam', ExamController::class);
+
+
+    Route::controller(ExamQuestionsController::class)->group(function () {
+        Route::prefix('exam-questions')->name('exam-questions.')->group(function () {
+            Route::get("/{cource_id?}",'index')->name('index');
+            Route::get("/{cource_id?}/create",'create')->name('create');
+            Route::post("/store",'store')->name('store');
+            Route::get("/{cource_id?}/{id}/edit",'edit')->name('edit');
+            Route::put("/{id}/update",'update')->name('update');
+            Route::delete("/{routeId}/delete",'destroy')->name('destroy');
+            Route::post("/{routeId}/sort",'sort')->name('sort');
+        });
+    });
+    
 });
 
 require __DIR__.'/auth.php';

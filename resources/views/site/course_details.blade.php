@@ -25,10 +25,14 @@
                         @if(auth()->check())
                             @if($course->price > 0)
                                 <!-- Paid Course -->
-                                <a href="{{ route('course.learn',$course->slug) }}" class="btn btn-primary square mb-2">Enroll Now (₹{{ number_format($course->price, 2) }})</a>
+                                <a href="{{ route('course.enroll',$course->id) }}" class="btn btn-primary square mb-2">
+                                    Enroll Now (₹{{ number_format($course->price, 2) }})
+                                </a>
                             @else
                                 <!-- Free Course -->
-                                <a href="{{ route('course.learn',$course->slug) }}" class="btn btn-primary square mb-2">Enroll Now (Free)</a>
+                                <a href="{{ route('course.enroll',$course->id) }}" class="btn btn-primary square mb-2">
+                                    Enroll Now (Free)
+                                </a>
                             @endif
                         @else
                             <!-- Not Authenticated -->

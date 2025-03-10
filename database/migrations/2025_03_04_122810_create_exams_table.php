@@ -13,8 +13,15 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('description');
+            $table->enum('type', ['free', 'paid']);
+            $table->decimal('price', 10, 2)->nullable();
+            $table->foreignId('course_id')->nullable()->constrained()->onDelete('cascade');
             $table->integer('duration_minutes'); // Time limit
+            $table->integer('passing_percentage')->default(50);
+            $table->tinyInteger('is_visible')->default(0);
             $table->timestamps();
         });
     }

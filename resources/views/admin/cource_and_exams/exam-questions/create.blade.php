@@ -1,36 +1,37 @@
 @extends('layouts.app')
 
-    @section('title') Exams @endsection
+    @section('title') Exam Questions @endsection
 
     @section('style')
     <link rel="stylesheet" href="{{ asset('assets/admin-assets/plugins/dropify/css/dropify.min.css') }}">
     @endsection
-
+    
     @section('content')
 
     <div class="section-body">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="header-action">
-                    <h1 class="page-title">Exams</h1>
+                    <h1 class="page-title">Exam Questions</h1>
                     <ol class="breadcrumb page-breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('exam.index') }}">Exams</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit Exams</li>
+                        <li class="breadcrumb-item"><a href="{{ route('exam.index') }}">Exam</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('exam-questions.index',request()->segment(2)) }}">Course Content</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Exam Questions</li>
                     </ol>
                 </div>
                 <ul class="nav nav-tabs page-header-tab">
                     {{-- <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Student-all" id="list-tab">List</a></li> --}}
 
-                    <li class="nav-item"><a class="btn btn-info" href="{{ route('exam.index') }}"><i class="fa fa-arrow-left me-2"></i>Back</a></li>
+                    <li class="nav-item"><a class="btn btn-info" href="{{ route('exam-questions.index',request()->segment(2)) }}"><i class="fa fa-arrow-left me-2"></i>Back</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <form action="{{ route('exam.update',$item->id) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('exam-questions.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-    @method('PUT')
+    <input type="hidden" value="{{ request()->segment(2) }}" name="exam_id">
     <div class="section-body mt-4">
         <div class="container-fluid">
             <div class="row">
@@ -45,80 +46,56 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Exam Title <span class="text-danger">*</span></label>
+                                <label class="col-md-3 col-form-label">Question <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="Enter title" name="name" value="{{ old('name',$item->title) }}" required>
+                                    <textarea rows="4" class="form-control" placeholder="Enter question" name="question" required>{{ old('question') }}</textarea>
                                 </div>
                             </div>
+
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Course <span class="text-danger"></span></label>
+                                <label class="col-md-3 col-form-label">Option A <span class="text-danger">*</span></label>
                                 <div class="col-md-9">
-                                    <select class="form-control input-height" name="course_id">
-                                        <option value selected>Select...</option>
-                                        @foreach($courses as $course)
-                                        <option value="{{ $course->id }}" @if($course->id == $item->course_id) selected @endif>{{ $course->title }}</option>
-                                        @endforeach
+                                    <input type="text" class="form-control" name="option_a" placeholder="Enter Option A" value="{{ old('option_a') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Option B <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="option_b" placeholder="Enter Option B" value="{{ old('option_b') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Option C <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="option_c" placeholder="Enter Option C" value="{{ old('option_c') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Option D <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="option_d" placeholder="Enter Option D" value="{{ old('option_d') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Correct Answer <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <select class="form-control" name="correct_answer" required>
+                                        <option value="">Select Correct Answer</option>
+                                        <option value="a">Option A</option>
+                                        <option value="b">Option B</option>
+                                        <option value="c">Option C</option>
+                                        <option value="d">Option D</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Description</label>
-                                <div class="col-md-9">
-                                    <textarea rows="4" class="form-control no-resize summernote" placeholder="Enter Description" name="description">{{ old('description',$item->description) }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Exam Payment Type <span class="text-danger">*</span></label>
-                                <div class="col-md-9">
-                                    <select class="form-control input-height" name="type" id="courseType" required>
-                                        <option {{ old('type', $item->type) == 'free' ? 'selected' : '' }} value="free" selected>Free</option>
-                                        <option {{ old('type', $item->type) == 'paid' ? 'selected' : '' }} value="paid">Paid</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row" id="cource-price" style="display: none;">
-                                <label class="col-md-3 col-form-label">Exam Price <span class="text-danger">*</span></label>
-                                <div class="col-md-9">
-                                    <input type="number" class="form-control" placeholder="Enter price" name="price" id="priceField" value="{{ old('price',$item->price) }}" step="0.01">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Exam Duration (Minutes) <span class="text-danger">*</span></label>
-                                <div class="col-md-9">
-                                    <input type="number" class="form-control" placeholder="Enter duration in minutes" name="duration_minutes" value="{{ old('duration_minutes',$item->duration_minutes) }}" min="1" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">Passing Percentage <span class="text-danger">*</span></label>
-                                <div class="col-md-9">
-                                    <input type="number" class="form-control" placeholder="Enter passing percentage" name="passing_percentage" value="{{ old('passing_percentage',$item->passing_percentage) }}" min="1" max="100" step="0.01" required>
-                                </div>
-                            </div>
-                            
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-12 col-sm-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Exam Image</h3>
-                            <div class="card-options ">
-                                {{-- <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                                <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a> --}}
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="clearfix">
-                                <div class="form-group">
-                                    <input type="file" class="dropify" name="image" data-default-file="{{ $item->getFirstMediaUrl('exam-image') }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Save & Publish</h3>
@@ -129,17 +106,17 @@
                         </div>
                         <div class="card-body">
                             <div class="row clearfix">
-                                <div class="col-sm-12 mb-3">
+                                {{-- <div class="col-sm-12 mb-3">
                                     <label class="form-label mb-3 d-flex">Visibility</label>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" id="customRadioInline1" name="is_visible" class="form-check-input" value="1" {{ check_uncheck($item->is_visible,1) }}>
+                                        <input type="radio" id="customRadioInline1" name="is_visible" class="form-check-input" value="1" checked>
                                         <label class="form-check-label" for="customRadioInline1">Show</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" id="customRadioInline2" name="is_visible" class="form-check-input" value="0" {{ check_uncheck($item->is_visible,0) }}>
+                                        <input type="radio" id="customRadioInline2" name="is_visible" class="form-check-input" value="0">
                                         <label class="form-check-label" for="customRadioInline2">Hide</label>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <button type="reset" class="btn btn-outline-secondary">Cancel</button>
@@ -161,12 +138,12 @@
     <script>
         $(document).ready(function () {
             function togglePriceField() {
-                var type = $('#courseType').val();
+                var type = $('#Course ContentType').val();
                 if (type === 'paid') {
-                    $('#cource-price').show();
+                    $('#cource-content-price').show();
                     $('#priceField').attr('required', true);
                 } else {
-                    $('#cource-price').hide();
+                    $('#cource-content-price').hide();
                     $('#priceField').removeAttr('required');
                     $('#priceField').val('');
                 }
@@ -176,7 +153,7 @@
             togglePriceField();
     
             // On change event
-            $('#courseType').on('change', function () {
+            $('#Course ContentType').on('change', function () {
                 togglePriceField();
             });
         });

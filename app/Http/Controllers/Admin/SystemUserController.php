@@ -166,6 +166,7 @@ class SystemUserController extends Controller implements HasMiddleware
                 $system_user->addMedia($request->file('pan_image'))->toMediaCollection('system-user-pan');
             }
 
+            $system_user->syncRoles($request->roles);
             $res = $system_user->update();
 
             if($res){

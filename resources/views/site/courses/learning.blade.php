@@ -37,28 +37,26 @@
         }
 
         .col-md-8 button {
-    background-color: #113995;
-    width: 80px;
-    height: 40px;
-    border-radius: 30px;
-    top: 40%;
-    color: #000;
-    opacity: 1;
-    box-shadow: 0px 0px 5px 0px #00000036;
-    border: 2px solid #fff;
-}
-.col-md-8 button span{
-    color: #fff;
-    font-weight: 600;    
-}
-.carousel-control-next-icon{
-    width: 15px;
-}
-.carousel-control-prev-icon{
-    width: 15px;
-}
-
-
+            background-color: #113995;
+            width: 80px;
+            height: 40px;
+            border-radius: 30px;
+            top: 40%;
+            color: #000;
+            opacity: 1;
+            box-shadow: 0px 0px 5px 0px #00000036;
+            border: 2px solid #fff;
+        }
+        .col-md-8 button span{
+            color: #fff;
+            font-weight: 600;    
+        }
+        .carousel-control-next-icon{
+            width: 15px;
+        }
+        .carousel-control-prev-icon{
+            width: 15px;
+        }
     </style>
 @endsection
 
@@ -70,8 +68,6 @@
 @section('content')
     <main>
         <!-- Sidebar -->
-
-
         <article class="article">
             <div class="container p-3 bsb-overlay mt-5">
                 <div class="row gap-3 justify-content-center">
@@ -95,17 +91,38 @@
                     <!-- Content Area -->
                     <div class="col-md-8 p-4">
                         <div>
-                        @if ($currentLesson)
-                            <h2>{{ $currentLesson->title }}</h2>
-                            <p>{!! $currentLesson->content !!}</p>
-                        @else
-                            <p>No lesson selected.</p>
-                        @endif
-                    </div>
-               <div class="d-flex justify-content-between">
-                <button><span class="d-flex justify-content-center"><p class="carousel-control-prev-icon me-1"></p><p class="d-flex align-items-center">Prev</p></span></button>
-                <button><span class="d-flex justify-content-center"><p class="d-flex align-items-center">Next</p><p class="carousel-control-next-icon ms-1"></p></span></button>
-               </div>
+                            @if ($currentLesson)
+                                <h2>{{ $currentLesson->title }}</h2>
+                                <p>{!! $currentLesson->content !!}</p>
+                            @else
+                                <p>No lesson selected.</p>
+                            @endif
+                        </div>
+                        {{-- <div class="d-flex justify-content-between">
+                            <button><span class="d-flex justify-content-center"><p class="carousel-control-prev-icon me-1"></p><p class="d-flex align-items-center">Prev</p></span></button>
+                            <button><span class="d-flex justify-content-center"><p class="d-flex align-items-center">Next</p><p class="carousel-control-next-icon ms-1"></p></span></button>
+                        </div> --}}
+                        <div class="d-flex justify-content-between" style="z-index: 99999;">
+                            @if ($prevLesson)
+                                <a href="{{ route('course.learn', ['course_slug' => $course->slug, 'lesson_id' => $prevLesson->id]) }}">
+                                    <span class="d-flex align-items-center">
+                                        <p class="carousel-control-prev-icon me-1"></p> Prev
+                                    </span>
+                                </a>
+                            @else
+                                <span class="btn btn-secondary disabled">Prev</span>
+                            @endif
+                        
+                            @if ($nextLesson)
+                                <a href="{{ route('course.learn', ['course_slug' => $course->slug, 'lesson_id' => $nextLesson->id]) }}">
+                                    <span class="d-flex align-items-center">
+                                        Next <p class="carousel-control-next-icon ms-1"></p>
+                                    </span>
+                                </a>
+                            @else
+                                <span class="btn btn-secondary disabled">Next</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
